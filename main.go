@@ -1,26 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
-	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
-	fmt.Println("Hello, World!")
-	problemSolver(1000000) // Increase the data amount to make the leak more apparent
-}
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
 
-func problemSolver(dataAmount int) {
-	var data []int
-	for {
-		data = append(data, make([]int, dataAmount)...) // Append a large slice to increase memory usage
-		time.Sleep(10 * time.Millisecond)
-		fmt.Println("Length of slice:", len(data))
+	err := r.Run()
+	if err != nil {
+		log.Fatalf("Error starting server: %s", err)
 	}
+
 }
