@@ -10,7 +10,7 @@ import (
 
 
 
-func connectDB(config configs.Config) (*gorm.DB, error) {
+func DB(config configs.Config) (*gorm.DB, error) {
 
 	// DSN (Data Source Name)
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
@@ -23,4 +23,5 @@ func connectDB(config configs.Config) (*gorm.DB, error) {
 
 	return db, err
 }
+
 
