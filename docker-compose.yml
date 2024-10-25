@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: lookinlab-db
+    image: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      PGDATA: /data/postgres
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "${DB_PORT}:5432"
+    restart: unless-stopped
+
+
+volumes:
+  postgres:
