@@ -31,7 +31,3 @@ func LoadDBConfig() (*DBConfig) {
 
 	return config
 }
-
-// func DSN(c DBConfig) string {
-// 	return fmt.Sprintf("user=%s password=%s dbname=%s port=%s sslmode=disable", c.User, c.Pass, c.Name, c.Port)
-// }
