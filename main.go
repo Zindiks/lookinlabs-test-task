@@ -5,6 +5,7 @@ import (
 
 	"github.com/Zindiks/lookinlabs-test-task/configs"
 	"github.com/Zindiks/lookinlabs-test-task/repository"
+	"github.com/Zindiks/lookinlabs-test-task/routes"
 	"github.com/charmbracelet/log"
 	"github.com/gin-gonic/gin"
 )
@@ -13,13 +14,12 @@ func main() {
 
 	configs := configs.Configs()
 
-
 	db, err := repository.DB(*configs)
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		log.Info("Successfully connected to the database")
 	}
-
-	log.Info(db)
 
 	gin.ForceConsoleColor()
 	r := gin.Default()
@@ -30,10 +30,16 @@ func main() {
 		})
 	})
 
+	api := r.Group("/api/v1")
+	userGroup := api.Group("/users")
+	routes.UserRoutes(userGroup, db)
+
+
+
 	port := configs.App.Port
 
-	err2 := r.Run(":" + port)
-	if err2 != nil {
+	err = r.Run(":" + port)
+	if err != nil {
 		log.Fatalf("Error starting server: %s", err)
 	}
 

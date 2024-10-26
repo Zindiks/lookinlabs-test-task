@@ -4,11 +4,10 @@ import (
 	"fmt"
 
 	"github.com/Zindiks/lookinlabs-test-task/configs"
+	"github.com/Zindiks/lookinlabs-test-task/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-
 
 func DB(config configs.Config) (*gorm.DB, error) {
 
@@ -18,10 +17,10 @@ func DB(config configs.Config) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err 
+		return nil, err
 	}
 
-	return db, err
+	db.AutoMigrate(&model.User{})
+
+	return db, nil
 }
-
-
