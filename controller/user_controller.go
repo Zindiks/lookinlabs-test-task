@@ -4,79 +4,85 @@ import (
 	"net/http"
 
 	"github.com/Zindiks/lookinlabs-test-task/model"
+	"github.com/Zindiks/lookinlabs-test-task/service"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func CreateUser(c *gin.Context, db *gorm.DB) {
-
-	var user model.User
-
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := db.Create(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save user"})
-		return
-	}
-
-	c.JSON(http.StatusOK, user)
-
+type UserController struct {
+    userService service.UserService
 }
 
-func GetUsers(c *gin.Context, db *gorm.DB) {
-
-	var users []model.User
-
-	if err := db.Find(&users).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch users"})
-		return
-	}
-
-	c.JSON(http.StatusOK, users)
-
+func NewUserController(userService service.UserService) *UserController {
+    return &UserController{
+        userService: userService,
+    }
 }
 
-func GetUser(c *gin.Context, db *gorm.DB) {
+func (ctrl *UserController) CreateUser(c *gin.Context) {
+    var user model.User
 
-	id := c.Param("id")
+    if err := c.ShouldBindJSON(&user); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
 
-	var user model.User
+    if err := ctrl.userService.CreateUser(&user); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save user"})
+        return
+    }
 
-	err := db.First(&user, id).Error
-
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, user)
-
+    c.JSON(http.StatusOK, user)
 }
 
-func UpdateUser(c *gin.Context, db *gorm.DB) {
+func (ctrl *UserController) GetUsers(c *gin.Context) {
+    users, err := ctrl.userService.GetUsers()
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch users"})
+        return
+    }
 
-	id := c.Param("id")
-	var user model.User
+    c.JSON(http.StatusOK, users)
+}
 
-	if err := db.First(&user, id).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-			return
-		}
-	}
+func (ctrl *UserController) GetUser(c *gin.Context) {
+    id := c.Param("id")
 
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    user, err := ctrl.userService.GetUserByID(id)
+    if err != nil {
+        if err == gorm.ErrRecordNotFound {
+            c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+            return
+        }
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch user"})
+        return
+    }
 
-	if err := db.Save(&user).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database Error"})
-	}
+    c.JSON(http.StatusOK, user)
+}
 
-	c.JSON(http.StatusOK, user)
+func (ctrl *UserController) UpdateUser(c *gin.Context) {
+    id := c.Param("id")
 
+    user, err := ctrl.userService.GetUserByID(id)
+    if err != nil {
+        if err == gorm.ErrRecordNotFound {
+            c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+            return
+        }
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch user"})
+        return
+    }
+
+    if err := c.ShouldBindJSON(user); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    if err := ctrl.userService.UpdateUser(user); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+        return
+    }
+
+    c.JSON(http.StatusOK, user)
 }

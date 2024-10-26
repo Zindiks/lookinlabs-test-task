@@ -15,6 +15,21 @@ services:
       - "${DB_PORT}:5432"
     restart: unless-stopped
 
+  # app:
+  #   container_name: lookinlab-app
+  #   build:
+  #     context: .  # Use the current directory as the build context
+  #     dockerfile: Dockerfile  # Specify the Dockerfile name if it's not the default
+  #   environment:
+  #     DB_USER: ${DB_USER}
+  #     DB_PASS: ${DB_PASS}
+  #     DB_NAME: ${DB_NAME}
+  #     DB_PORT: ${DB_PORT}  # Optionally pass the DB_PORT if needed
+  #   ports:
+  #     - "8080:8080"  # Map port 8080 on the host to port 8080 in the container
+  #   depends_on:
+  #     - postgres  # Wait for the postgres service to start before running the app
+  #   restart: unless-stopped
 
 volumes:
   postgres:

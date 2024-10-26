@@ -1,0 +1,14 @@
+# vendor/
+
+
+# *.exe
+# *.exe~
+# *.dll
+# *.so
+# *.dylib
+
+# # Ignore test files
+# *.test
+
+# *.tmp
+# *.log
