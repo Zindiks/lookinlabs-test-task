@@ -1,2 +1,6 @@
 go.*
 tmp/
+
+
+./.idea
+.idea

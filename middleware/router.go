@@ -1,4 +1,4 @@
-package router
+package middleware
 
 import (
     "github.com/Zindiks/lookinlabs-test-task/controller"

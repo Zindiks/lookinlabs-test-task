@@ -1,14 +1,14 @@
-# vendor/
+vendor/
 
 
-# *.exe
-# *.exe~
-# *.dll
-# *.so
-# *.dylib
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
-# # Ignore test files
-# *.test
+# Ignore test files
+*.test
 
-# *.tmp
-# *.log
+*.tmp
+*.log

@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/Zindiks/lookinlabs-test-task/model"
 	"gorm.io/gorm"
+
 )
 
 type UserService interface {
@@ -34,6 +35,8 @@ func (s *userService) GetUsers() ([]model.User, error) {
 
 func (s *userService) GetUserByID(id string) (*model.User, error) {
 	var user model.User
+
+
 	err := s.db.First(&user, id).Error
 	if err != nil {
 		return nil, err

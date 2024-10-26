@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/Zindiks/lookinlabs-test-task/configs"
 	"github.com/Zindiks/lookinlabs-test-task/controller"
+	"github.com/Zindiks/lookinlabs-test-task/middleware"
 	"github.com/Zindiks/lookinlabs-test-task/repository"
-	"github.com/Zindiks/lookinlabs-test-task/router"
 	"github.com/Zindiks/lookinlabs-test-task/service"
 	"github.com/charmbracelet/log"
 	"github.com/gin-gonic/gin"
@@ -34,7 +34,7 @@ func main() {
 		})
 	})
 
-	router.SetupRoutes(r, userController)
+	middleware.SetupRoutes(r, userController)
 
 	PORT := configs.App.Port
 	if err := r.Run(":" + PORT); err != nil {

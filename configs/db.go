@@ -21,7 +21,7 @@ func LoadDBConfig() (*DBConfig) {
 		
 	}
 
-	config := &DBConfig{
+	return &DBConfig{
 		Host: os.Getenv("DB_HOST"),
 		Port: os.Getenv("DB_PORT"),
 		User: os.Getenv("DB_USER"),
@@ -29,5 +29,5 @@ func LoadDBConfig() (*DBConfig) {
 		Name: os.Getenv("DB_NAME"),
 	}
 
-	return config
+	
 }
